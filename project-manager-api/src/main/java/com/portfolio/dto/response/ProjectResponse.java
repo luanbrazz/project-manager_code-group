@@ -1,5 +1,6 @@
 package com.portfolio.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.portfolio.enums.ProjectStatus;
 import com.portfolio.enums.RiskLevel;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record ProjectResponse(
         Long id,
         String name,

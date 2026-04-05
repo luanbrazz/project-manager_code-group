@@ -3,21 +3,23 @@ package com.portfolio.mapper;
 import com.portfolio.dto.request.MemberCreateRequest;
 import com.portfolio.dto.response.MemberResponse;
 import com.portfolio.entity.MockMember;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class MockMemberMapper {
 
-    private final ModelMapper modelMapper;
-
     public MemberResponse toResponse(MockMember member) {
-        return modelMapper.map(member, MemberResponse.class);
+        return new MemberResponse(
+                member.getId(),
+                member.getName(),
+                member.getRole()
+        );
     }
 
     public MockMember toEntity(MemberCreateRequest request) {
-        return modelMapper.map(request, MockMember.class);
+        return MockMember.builder()
+                .name(request.name())
+                .role(request.role())
+                .build();
     }
 }

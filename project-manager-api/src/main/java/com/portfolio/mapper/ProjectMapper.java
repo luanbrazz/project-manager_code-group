@@ -7,7 +7,6 @@ import com.portfolio.entity.ProjectMember;
 import com.portfolio.enums.RiskLevel;
 import com.portfolio.service.RiskCalculatorService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,12 +15,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectMapper {
 
-    private final ModelMapper modelMapper;
     private final RiskCalculatorService riskCalculatorService;
 
     public ProjectResponse toResponse(Project project) {
-        ProjectResponse base = modelMapper.map(project, ProjectResponse.class);
-
         RiskLevel risk = riskCalculatorService.calculate(
                 project.getBudget(),
                 project.getStartDate(),
@@ -34,23 +30,27 @@ public class ProjectMapper {
                 .toList();
 
         return new ProjectResponse(
-                base.id(),
-                base.name(),
-                base.startDate(),
-                base.expectedEndDate(),
-                base.actualEndDate(),
-                base.budget(),
-                base.description(),
-                base.managerId(),
-                base.status(),
+                project.getId(),
+                project.getName(),
+                project.getStartDate(),
+                project.getExpectedEndDate(),
+                project.getActualEndDate(),
+                project.getBudget(),
+                project.getDescription(),
+                project.getManagerId(),
+                project.getStatus(),
                 risk,
                 members,
-                base.createdAt(),
-                base.updatedAt()
+                project.getCreatedAt(),
+                project.getUpdatedAt()
         );
     }
 
     public ProjectMemberResponse toMemberResponse(ProjectMember member) {
-        return modelMapper.map(member, ProjectMemberResponse.class);
+        return new ProjectMemberResponse(
+                member.getId(),
+                member.getMemberId(),
+                member.getAllocatedAt()
+        );
     }
 }
