@@ -5,6 +5,7 @@ import com.portfolio.dto.response.MemberResponse;
 import com.portfolio.dto.response.PortfolioReportResponse;
 import com.portfolio.dto.response.ProjectMemberResponse;
 import com.portfolio.dto.response.ProjectResponse;
+import com.portfolio.enums.MemberRole;
 import com.portfolio.enums.ProjectStatus;
 import com.portfolio.enums.RiskLevel;
 import jakarta.validation.ConstraintViolation;
@@ -120,7 +121,6 @@ class DtoTest {
         }
     }
 
-
     @Nested
     @DisplayName("ProjectUpdateRequest — validações")
     class ProjectUpdateRequestTest {
@@ -152,7 +152,6 @@ class DtoTest {
         }
     }
 
-
     @Nested
     @DisplayName("StatusChangeRequest — validações")
     class StatusChangeRequestTest {
@@ -172,7 +171,6 @@ class DtoTest {
                     .anyMatch(v -> v.getPropertyPath().toString().equals("newStatus"));
         }
     }
-
 
     @Nested
     @DisplayName("MemberAllocationRequest — validações")
@@ -194,7 +192,6 @@ class DtoTest {
         }
     }
 
-
     @Nested
     @DisplayName("MemberCreateRequest — validações")
     class MemberCreateRequestTest {
@@ -202,14 +199,14 @@ class DtoTest {
         @Test
         @DisplayName("request válida não deve ter violações")
         void requestValida_semViolacoes() {
-            var req = new MemberCreateRequest("João Silva", "funcionário");
+            var req = new MemberCreateRequest("João Silva", MemberRole.FUNCIONARIO);
             assertThat(validator.validate(req)).isEmpty();
         }
 
         @Test
         @DisplayName("nome em branco deve falhar")
         void nomeEmBranco_deveGerarViolacao() {
-            var req = new MemberCreateRequest("", "funcionário");
+            var req = new MemberCreateRequest("", MemberRole.FUNCIONARIO);
             assertThat(validator.validate(req))
                     .anyMatch(v -> v.getPropertyPath().toString().equals("name"));
         }
@@ -217,12 +214,12 @@ class DtoTest {
         @Test
         @DisplayName("role em branco deve falhar")
         void roleEmBranco_deveGerarViolacao() {
-            var req = new MemberCreateRequest("João", "");
+            // Como role é @NotNull, passar null para forçar falha de validação
+            var req = new MemberCreateRequest("João", null);
             assertThat(validator.validate(req))
                     .anyMatch(v -> v.getPropertyPath().toString().equals("role"));
         }
     }
-
 
     @Nested
     @DisplayName("Response records — instanciação e acesso a campos")
@@ -269,10 +266,10 @@ class DtoTest {
         @Test
         @DisplayName("MemberResponse: campos acessíveis corretamente")
         void memberResponse_camposAcessiveis() {
-            var response = new MemberResponse(1L, "João", "funcionário");
+            var response = new MemberResponse(1L, "João", MemberRole.FUNCIONARIO);
             assertThat(response.id()).isEqualTo(1L);
             assertThat(response.name()).isEqualTo("João");
-            assertThat(response.role()).isEqualTo("funcionário");
+            assertThat(response.role()).isEqualTo(MemberRole.FUNCIONARIO);
         }
 
         @Test
@@ -296,7 +293,6 @@ class DtoTest {
             assertThat(response.createdAt()).isEqualTo(now);
         }
     }
-
 
     @Nested
     @DisplayName("RiskLevel enum — displayName")
