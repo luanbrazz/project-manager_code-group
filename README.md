@@ -261,7 +261,7 @@ src/main/java/com/portfolio/
 ├── repository/      # JpaRepository + Specification para filtros dinâmicos
 ├── service/
 │   ├── impl/        # ProjectServiceImpl, ReportServiceImpl, etc.
-│   └── *.java       # Interfaces (BaseService, ProjectService, etc.)
+│   └── *.java       # Interfaces (ReportService, ProjectService, etc.)
 └── util/            # MessageUtil (i18n)
 
 src/main/resources/
