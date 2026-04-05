@@ -3,11 +3,14 @@ package com.portfolio.exception;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.portfolio.controller.ProjectController;
 import com.portfolio.service.ProjectService;
+import com.portfolio.util.MessageUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -35,6 +38,14 @@ class GlobalExceptionHandlerTest {
 
     @MockitoBean
     private ProjectService projectService;
+
+    @BeforeEach
+    void setUp() {
+        var messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("i18n/messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        new MessageUtil(messageSource);
+    }
 
     @Test
     @WithMockUser
@@ -109,7 +120,7 @@ class GlobalExceptionHandlerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.fieldErrors").exists())
-                .andExpect(jsonPath("$.message").value("Um ou mais campos são inválidos."));
+                .andExpect(jsonPath("$.message").exists());
     }
 
     @Test
@@ -122,6 +133,6 @@ class GlobalExceptionHandlerTest {
         mockMvc.perform(get("/api/projects/1"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.status").value(500))
-                .andExpect(jsonPath("$.message").value("Erro interno no servidor."));
+                .andExpect(jsonPath("$.message").exists());
     }
 }

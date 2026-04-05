@@ -105,7 +105,6 @@ class ProjectServiceTest {
         assertThatThrownBy(() -> service.create(req)).isInstanceOf(ResourceNotFoundException.class);
     }
 
-
     @Test
     @DisplayName("delete: deve excluir projeto com status EM_ANALISE")
     void delete_deveExcluirProjeto_comStatusPermitido() {
