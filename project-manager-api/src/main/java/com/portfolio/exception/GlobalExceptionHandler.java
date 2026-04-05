@@ -1,5 +1,6 @@
 package com.portfolio.exception;
 
+import com.portfolio.util.MessageUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -56,8 +57,8 @@ public class GlobalExceptionHandler {
                 ErrorResponse.builder()
                         .timestamp(LocalDateTime.now())
                         .status(400)
-                        .error("Validation failed")
-                        .message("Um ou mais campos são inválidos.")
+                        .error(MessageUtil.get("validation.error.title"))
+                        .message(MessageUtil.get("validation.error.message"))
                         .path(req.getRequestURI())
                         .fieldErrors(fieldErrors)
                         .build()
@@ -68,7 +69,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGeneral(
             Exception ex, HttpServletRequest req) {
         log.error("Erro inesperado: {}", ex.getMessage(), ex);
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno no servidor.", req.getRequestURI());
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, MessageUtil.get("validation.internal.error.on.the.server"), req.getRequestURI());
     }
 
     private ResponseEntity<ErrorResponse> build(HttpStatus status, String message, String path) {
