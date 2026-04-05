@@ -38,7 +38,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     private static final int MAX_MEMBERS_PER_PROJECT = 10;
     private static final int MAX_ACTIVE_PROJECTS_PER_MEMBER = 3;
-    private static final String EMPLOYEE_ROLE = "funcionário";
 
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository memberRepository;
@@ -146,9 +145,10 @@ public class ProjectServiceImpl implements ProjectService {
 
         MemberResponse member = fetchMemberOrThrow(memberId);
 
-        if (!EMPLOYEE_ROLE.equalsIgnoreCase(member.role())) {
+        if (!member.role().canBeAllocated()) {
             throw new MemberAllocationException(
-                    MessageUtil.get("error.member.notEmployee", member.name(), member.role())
+                    MessageUtil.get("error.member.notEmployee",
+                            member.name(), member.role().getDisplayName())
             );
         }
 

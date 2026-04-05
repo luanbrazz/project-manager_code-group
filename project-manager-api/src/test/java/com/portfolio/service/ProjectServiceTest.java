@@ -8,6 +8,7 @@ import com.portfolio.dto.response.MemberResponse;
 import com.portfolio.dto.response.ProjectResponse;
 import com.portfolio.entity.Project;
 import com.portfolio.entity.ProjectMember;
+import com.portfolio.enums.MemberRole;
 import com.portfolio.enums.ProjectStatus;
 import com.portfolio.enums.RiskLevel;
 import com.portfolio.exception.BusinessException;
@@ -74,8 +75,8 @@ class ProjectServiceTest {
 
         projectResponse = new ProjectResponse(1L, "Sistema de RH", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 4, 1), null, new BigDecimal("80000"), null, 3L, ProjectStatus.EM_ANALISE, RiskLevel.BAIXO, List.of(), LocalDateTime.now(), LocalDateTime.now());
 
-        funcionario = new MemberResponse(1L, "João Silva", "funcionário");
-        gerente = new MemberResponse(3L, "Carlos Souza", "gerente");
+        funcionario = new MemberResponse(1L, "João Silva", MemberRole.FUNCIONARIO);
+        gerente = new MemberResponse(3L, "Carlos Souza", MemberRole.GERENTE);
     }
 
 

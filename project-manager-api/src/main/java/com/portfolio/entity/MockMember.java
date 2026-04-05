@@ -1,5 +1,6 @@
 package com.portfolio.entity;
 
+import com.portfolio.enums.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,7 @@ public class MockMember {
     @Column(nullable = false, length = 200)
     private String name;
 
+    @Convert(converter = MemberRoleConverter.class)
     @Column(nullable = false, length = 100)
-    private String role;
+    private MemberRole role;
 }
