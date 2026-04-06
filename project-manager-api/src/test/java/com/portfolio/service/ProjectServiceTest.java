@@ -1,6 +1,6 @@
 package com.portfolio.service;
 
-import com.portfolio.client.MemberClient;
+import com.portfolio.client.MemberClientService;
 import com.portfolio.dto.request.MemberAllocationRequest;
 import com.portfolio.dto.request.ProjectCreateRequest;
 import com.portfolio.dto.request.StatusChangeRequest;
@@ -53,7 +53,7 @@ class ProjectServiceTest {
     @Mock
     private ProjectMapper projectMapper;
     @Mock
-    private MemberClient memberClient;
+    private MemberClientService memberClientService;
 
     @InjectMocks
     private ProjectServiceImpl service;
@@ -85,7 +85,7 @@ class ProjectServiceTest {
     void create_deveRetornarProjetoComStatusEmAnalise() {
         var req = new ProjectCreateRequest("Sistema de RH", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 4, 1), null, new BigDecimal("80000"), "Descrição", 3L);
 
-        when(memberClient.findById(3L)).thenReturn(gerente);
+        when(memberClientService.findById(3L)).thenReturn(gerente);
         when(projectRepository.save(any(Project.class))).thenReturn(project);
         when(projectMapper.toResponse(project)).thenReturn(projectResponse);
 
@@ -100,7 +100,7 @@ class ProjectServiceTest {
     void create_deveLancarExcecao_seGerenteNaoExistir() {
         var req = new ProjectCreateRequest("Projeto X", LocalDate.now(), LocalDate.now().plusMonths(2), null, new BigDecimal("50000"), null, 99L);
 
-        when(memberClient.findById(99L)).thenThrow(new RuntimeException("Not found"));
+        when(memberClientService.findById(99L)).thenThrow(new RuntimeException("Not found"));
 
         assertThatThrownBy(() -> service.create(req)).isInstanceOf(ResourceNotFoundException.class);
     }
@@ -223,7 +223,7 @@ class ProjectServiceTest {
         var req = new MemberAllocationRequest(1L);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
-        when(memberClient.findById(1L)).thenReturn(funcionario);
+        when(memberClientService.findById(1L)).thenReturn(funcionario);
         when(memberRepository.existsByProjectIdAndMemberId(1L, 1L)).thenReturn(false);
         when(memberRepository.countActiveAllocationsByMemberId(eq(1L), anySet())).thenReturn(0L);
         when(memberRepository.save(any(ProjectMember.class))).thenReturn(new ProjectMember());
@@ -241,7 +241,7 @@ class ProjectServiceTest {
         var req = new MemberAllocationRequest(3L);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
-        when(memberClient.findById(3L)).thenReturn(gerente);
+        when(memberClientService.findById(3L)).thenReturn(gerente);
 
         assertThatThrownBy(() -> service.allocateMember(1L, req)).isInstanceOf(MemberAllocationException.class).hasMessageContaining("gerente");
     }
@@ -252,7 +252,7 @@ class ProjectServiceTest {
         var req = new MemberAllocationRequest(1L);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
-        when(memberClient.findById(1L)).thenReturn(funcionario);
+        when(memberClientService.findById(1L)).thenReturn(funcionario);
         when(memberRepository.existsByProjectIdAndMemberId(1L, 1L)).thenReturn(true);
 
         assertThatThrownBy(() -> service.allocateMember(1L, req)).isInstanceOf(MemberAllocationException.class).hasMessageContaining("já está alocado");
@@ -270,7 +270,7 @@ class ProjectServiceTest {
         project.setMembers(membros);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
-        when(memberClient.findById(1L)).thenReturn(funcionario);
+        when(memberClientService.findById(1L)).thenReturn(funcionario);
         when(memberRepository.existsByProjectIdAndMemberId(1L, 1L)).thenReturn(false);
 
         assertThatThrownBy(() -> service.allocateMember(1L, req)).isInstanceOf(MemberAllocationException.class).hasMessageContaining("limite máximo");
@@ -282,7 +282,7 @@ class ProjectServiceTest {
         var req = new MemberAllocationRequest(1L);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
-        when(memberClient.findById(1L)).thenReturn(funcionario);
+        when(memberClientService.findById(1L)).thenReturn(funcionario);
         when(memberRepository.existsByProjectIdAndMemberId(1L, 1L)).thenReturn(false);
         when(memberRepository.countActiveAllocationsByMemberId(eq(1L), anySet())).thenReturn(3L);
 

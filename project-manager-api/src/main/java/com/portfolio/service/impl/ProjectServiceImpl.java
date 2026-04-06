@@ -1,6 +1,6 @@
 package com.portfolio.service.impl;
 
-import com.portfolio.client.MemberClient;
+import com.portfolio.client.MemberClientService;
 import com.portfolio.dto.request.MemberAllocationRequest;
 import com.portfolio.dto.request.ProjectCreateRequest;
 import com.portfolio.dto.request.ProjectUpdateRequest;
@@ -42,7 +42,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository memberRepository;
     private final ProjectMapper projectMapper;
-    private final MemberClient memberClient;
+    private final MemberClientService memberClientService;
 
     @Override
     @Transactional
@@ -213,7 +213,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private MemberResponse fetchMemberOrThrow(Long memberId) {
         try {
-            return memberClient.findById(memberId);
+            return memberClientService.findById(memberId);
         } catch (Exception e) {
             throw new ResourceNotFoundException(
                     MessageUtil.get("error.member.notFound", memberId)
